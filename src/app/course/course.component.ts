@@ -13,9 +13,10 @@ import {
     withLatestFrom,
     concatAll, shareReplay
 } from 'rxjs/operators';
-import {merge, fromEvent, Observable, concat} from 'rxjs';
+import { merge, fromEvent, Observable, concat, pipe } from 'rxjs';
 import {Lesson} from '../model/lesson';
 import { createHttpObservable } from '../common/util';
+import { debug, RxJsLoggingLevel, setRxJsLogginLevel } from '../common/debug';
 
 
 @Component({
@@ -39,8 +40,11 @@ export class CourseComponent implements OnInit, AfterViewInit {
     ngOnInit() {
 
 		this.course$ = createHttpObservable(`api/courses/${this.courseId}`)
+			.pipe(
+				debug( RxJsLoggingLevel.INFO, "course value: ")
+			)
 		
-
+		setRxJsLogginLevel(RxJsLoggingLevel.DEBUG);
     }
 
     ngAfterViewInit() {
@@ -48,9 +52,12 @@ export class CourseComponent implements OnInit, AfterViewInit {
 		const searchLessons$ = fromEvent<any>(this.input.nativeElement, 'keyup')
 			.pipe(
 				map(event => event.target.value),
+				startWith(''),
+				debug(RxJsLoggingLevel.TRACE, "search: "),
 				debounceTime(400),
 				distinctUntilChanged(),
-				switchMap(search => this.loadLessons(search))
+				switchMap(search => this.loadLessons(search)),
+				debug( RxJsLoggingLevel.DEBUG, 'lessons value: ' )
 			);
 
 			const initialLessons$ = this.loadLessons();
