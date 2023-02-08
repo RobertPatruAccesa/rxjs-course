@@ -1,5 +1,19 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { concat, fromEvent, interval, noop, observable, Observable, of, timer, merge, Subject } from 'rxjs';
+import {
+	concat,
+	fromEvent,
+	interval,
+	noop,
+	observable,
+	Observable,
+	of,
+	timer,
+	merge,
+	Subject,
+	BehaviorSubject,
+	AsyncSubject,
+    ReplaySubject
+} from 'rxjs';
 import { delayWhen, filter, map, take, timeout } from 'rxjs/operators';
 import { createHttpObservable } from '../common/util';
 
@@ -10,14 +24,6 @@ import { createHttpObservable } from '../common/util';
 })
 export class AboutComponent implements OnInit {
 	ngOnInit() {
-		const subject = new Subject();
-		const serier$ = subject.asObservable();
-
-		serier$.subscribe(res => console.log(res));
-
-		subject.next(1);
-		subject.next(2);
-		subject.next(3);
-		subject.complete();
+		
 	}
 }
